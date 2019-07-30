@@ -1,8 +1,11 @@
 package demo.app.mail.interfaces.controller;
 
 import demo.app.abstracts.AbstractController;
+import demo.app.mail.interfaces.dto.RequestToSendMailDto;
+import demo.app.mail.interfaces.dto.SentMail;
 import demo.app.mail.service.SentMailSearchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +22,7 @@ public class SentMailSearchController extends AbstractController {
     private final SentMailSearchService sentMailSearchService;
 
     @GetMapping("/mails")
-    public Flux<ServerResponse> handleRequestToSend(@RequestParam("sender") String sender) {
-        return this.sentMailSearchService.searchAllBySender(sender)
-                                         .flatMap(response -> ServerResponse.ok().body(fromObject(response)));
+    public ResponseEntity<Flux<SentMail>> searchAllBySender(@RequestParam("sender") String sender) {
+        return ResponseEntity.ok(this.sentMailSearchService.searchAllBySender(sender));
     }
 }

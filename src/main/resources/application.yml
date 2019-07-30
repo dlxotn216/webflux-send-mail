@@ -1,0 +1,14 @@
+logging:
+  level:
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+    org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
+spring:
+  messages:
+    basename: i18n/messages
+
+---
+app:
+  constants:
+    awsRegion: us-west-2
+    awsMessageIdKeyName: awsMessageId
+    awsMailContentCharset: UTF-8

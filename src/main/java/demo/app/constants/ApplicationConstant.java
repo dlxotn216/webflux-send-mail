@@ -5,6 +5,7 @@ package demo.app.constants;
  */
 public final class ApplicationConstant {
     public static final String API_VERSION = "/api/v1";
+    public static final String SENDER = "sysmail01@crscube.co.kr";
 
     private ApplicationConstant() {
     }
