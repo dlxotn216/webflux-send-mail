@@ -1,6 +1,5 @@
 package demo.app.mail.infra.impl;
 
-import com.amazonaws.AmazonClientException;
 import demo.app.config.AppConstantsConfigurationProperties;
 import demo.app.mail.domain.Email;
 import demo.app.mail.infra.EmailSender;
@@ -38,7 +37,7 @@ public class AwsAsyncEmailSender implements EmailSender {
                                           return successInfo;
                                       });
         } catch (Exception ex) {
-            throw new AmazonClientException(ex.getMessage(), ex);
+            throw new IllegalArgumentException(ex.getMessage(), ex);
         }
     }
 

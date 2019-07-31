@@ -9,6 +9,5 @@ spring:
 ---
 app:
   constants:
-    awsRegion: us-west-2
     awsMessageIdKeyName: awsMessageId
     awsMailContentCharset: UTF-8

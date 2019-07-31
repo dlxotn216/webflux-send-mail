@@ -9,10 +9,8 @@ import freemarker.core.InvalidReferenceException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateNotFoundException;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.reactive.result.view.freemarker.FreeMarkerConfig;
@@ -27,19 +25,11 @@ import static java.lang.String.format;
  * Created by itaesu on 29/07/2019.
  */
 @Slf4j
-@Component
+@Component @RequiredArgsConstructor
 public class RequestToSendMailService {
     private final FreeMarkerConfig freemarkerConfig;
     private final EmailRepository emailRepository;
     private final EmailSender awsAsyncEmailSender;
-
-    public RequestToSendMailService(FreeMarkerConfig freemarkerConfig,
-                                    EmailRepository emailRepository,
-                                    @Qualifier("AwsAsyncEmailSender") EmailSender awsAsyncEmailSender) {
-        this.freemarkerConfig = freemarkerConfig;
-        this.emailRepository = emailRepository;
-        this.awsAsyncEmailSender = awsAsyncEmailSender;
-    }
 
     public Mono<Response> requestToSend(Request request) {
         return this.emailRepository.save(build(request))

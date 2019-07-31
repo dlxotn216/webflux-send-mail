@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Getter @Setter
 @ConfigurationProperties(prefix = "app.constants")
 public class AppConstantsConfigurationProperties {
-    private String awsRegion;
     private String awsMessageIdKeyName;
     private String awsMailContentCharset;
 }
