@@ -21,9 +21,12 @@ import static java.util.concurrent.CompletableFuture.completedFuture;
 
 /**
  * Created by itaesu on 30/07/2019.
+ *
+ * @see AwsAsyncEmailSender
+ * @deprecated AwsAsyncEmailSender를 사용
  */
 @Slf4j
-@Component("AwsEmailSender") @RequiredArgsConstructor
+@Component("AwsEmailSender") @RequiredArgsConstructor @Deprecated
 public class AwsEmailSender implements EmailSender {
 
     private final AppConstantsConfigurationProperties properties;
