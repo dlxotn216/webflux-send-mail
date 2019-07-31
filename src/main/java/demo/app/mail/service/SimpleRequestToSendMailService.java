@@ -1,10 +1,11 @@
 package demo.app.mail.service;
 
+import demo.app.mail.domain.Attachment;
 import demo.app.mail.domain.Email;
 import demo.app.mail.infra.EmailRepository;
 import demo.app.mail.infra.EmailSender;
-import demo.app.mail.interfaces.dto.RequestToSendMailDto.Request;
 import demo.app.mail.interfaces.dto.RequestToSendMailDto.Response;
+import demo.app.mail.interfaces.dto.RequestToSendMailDto.SimpleRequest;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -18,22 +19,22 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
-import static demo.app.utils.MessageUtils.getLocalizedMessage;
+import static demo.app.utils.MessageUtils.getMessage;
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by itaesu on 29/07/2019.
  */
 @Slf4j
 @Component @RequiredArgsConstructor
-public class RequestToSendMailService {
+public class SimpleRequestToSendMailService {
     private final FreeMarkerConfig freemarkerConfig;
     private final EmailRepository emailRepository;
     private final EmailSender awsAsyncEmailSender;
 
-    public Mono<Response> requestToSend(Request request) {
+    public Mono<Response> requestToSend(SimpleRequest request) {
         return this.emailRepository.save(build(request))
-                                   .doOnSuccess(this::readyAttachments)
                                    .doOnSuccess(this::sendMail)
                                    .map(Response::from);
     }
@@ -52,21 +53,20 @@ public class RequestToSendMailService {
                                 });
     }
 
-    private void readyAttachments(Email email) {
-
-    }
-
-    private Email build(Request request) {
+    private Email build(SimpleRequest request) {
         return Email.builder().sender(request.getSender())
                     .mailType(request.getMailType())
-                    .title(getLocalizedMessage(request.getTitleI18nCode(), request.getTitleParameters().toArray()))
+                    .title(getMessage(request.getTitleI18nCode(), request.getTitleParameters().toArray()))
                     .content(getContent(request))
                     .model(request.getModel())
                     .recipients(request.getRecipients())
+                    .attachments(request.getAttachmentMetas().stream()
+                                        .map(meta -> new Attachment(meta.getAttachmentName(), meta.getDownloadURL()))
+                                        .collect(toList()))
                     .build();
     }
 
-    private String getContent(Request request) {
+    private String getContent(SimpleRequest request) {
         try {
             final Template template = freemarkerConfig.getConfiguration().getTemplate(request.getTemplatePath());
             return FreeMarkerTemplateUtils.processTemplateIntoString(template, request.getModel());

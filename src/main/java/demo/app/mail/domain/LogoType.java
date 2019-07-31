@@ -7,12 +7,11 @@ import lombok.Getter;
  * Created by itaesu on 30/07/2019.
  */
 @AllArgsConstructor @Getter
-public enum MailStatus {
+public enum LogoType {
 
-    WAITING("Waiting"),
-    FAIL("Fail"),
-    SUCCESS("Success")
+    CTMS("/logos/ctms/logo.png", "logo.png")
     ;
 
-    private String code;
+    private String logoLocation;
+    private String logoName;
 }

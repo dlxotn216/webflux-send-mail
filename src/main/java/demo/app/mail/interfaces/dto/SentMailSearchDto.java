@@ -1,7 +1,7 @@
 package demo.app.mail.interfaces.dto;
 
 import demo.app.mail.domain.Email;
-import demo.app.mail.domain.MailStatus;
+import demo.app.mail.domain.EmailStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,22 +15,22 @@ import java.util.Map;
  */
 @ToString
 @Getter @AllArgsConstructor
-public final class SentMail {
+public final class SentMailSearchDto {
     private String id;
     private String title;
     private String sender;
     private List<String> recipients;
     private String content;
     private Map<String, Object> model;
-    private MailStatus mailStatus;
+    private EmailStatus emailStatus;
     private Map<String, String> additionalInformation = new HashMap<>();
 
-    private SentMail() {
+    private SentMailSearchDto() {
     }
 
 
-    public static SentMail from(Email email) {
-        return new SentMail(email.getId(), email.getTitle(), email.getSender(), email.getRecipients(), email.getContent(),
-                            email.getModel(), email.getStatus(), email.getAdditionalInformation());
+    public static SentMailSearchDto from(Email email) {
+        return new SentMailSearchDto(email.getId(), email.getTitle(), email.getSender(), email.getRecipients(), email.getContent(),
+                                     email.getModel(), email.getStatus(), email.getAdditionalInformation());
     }
 }

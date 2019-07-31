@@ -12,7 +12,7 @@ public final class MessageUtils {
 
     }
 
-    public static String getLocalizedMessage(String messageId, Object... args) {
+    public static String getMessage(String messageId, Object... args) {
         return getBean(MessageService.class).getLocalizedMessage(messageId, args);
     }
 }

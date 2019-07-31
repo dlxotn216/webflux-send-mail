@@ -5,8 +5,8 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,45 +26,50 @@ public class Email {
     private Map<String, Object> model;
 
     @Builder.Default
-    private MailStatus status = MailStatus.WAITING;
+    private List<Attachment> attachments = new ArrayList<>();
+
+    @Builder.Default
+    private EmailStatus status = EmailStatus.WAITING;
 
     @Builder.Default
     private Map<String, String> additionalInformation = new HashMap<>();
 
     public void processSuccess(Map<String, String> additionalInformation) {
         if (!CollectionUtils.isEmpty(additionalInformation)) {
-            additionalInformation.forEach(this::processSuccess);
+            additionalInformation.forEach(this::addAdditionalInformation);
         }
 
-        this.processSuccess();
+        this.status = EmailStatus.SUCCESS;
     }
 
-    public void processSuccess(String additionalInfoKet, String additionalInfoValue) {
-        if (!StringUtils.isEmpty(additionalInfoKet) && !StringUtils.isEmpty(additionalInfoValue)) {
-            this.addAdditionalInformation(additionalInfoKet, additionalInfoValue);
-        }
-
-        this.processSuccess();
-    }
-
-    public void processSuccess() {
-        this.status = MailStatus.SUCCESS;
-    }
 
     public void processFail(Throwable throwable) {
         if (throwable != null) {
             this.addAdditionalInformation("errorMessage", throwable.getMessage());
         }
 
-        this.processFail();
+        this.status = EmailStatus.FAIL;
     }
 
-    public void processFail() {
-        this.status = MailStatus.FAIL;
-
-    }
-
-    public void addAdditionalInformation(String key, String value) {
+    private void addAdditionalInformation(String key, String value) {
         this.additionalInformation.put(key, value);
     }
+
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public String getLogoLocation() {
+        return this.getLogoType().getLogoLocation();
+    }
+
+    public String getLogoName() {
+        return this.getLogoType().getLogoName();
+    }
+
+    private LogoType getLogoType() {
+        return this.mailType.getLogoType();
+    }
+
 }

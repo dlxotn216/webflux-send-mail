@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,33 +27,34 @@ import static org.assertj.core.api.BDDAssertions.then;
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RequestToSendEmailServiceTest {
+public class SimpleRequestToSendEmailServiceTest {
 
     @Autowired
     private SentMailSearchService sentMailSearchService;
 
     @Autowired
-    private RequestToSendMailService sendMailService;
+    private SimpleRequestToSendMailService sendMailService;
 
     @Test
     public void 정상적인_파라미터를_이용한_메일전송_요청_테스트() {
         //Given
         final List<String> recipients = Arrays.asList("taesu@crscube.co.kr", "dlxotn216@gmail.com");
-        final RequestToSendMailDto.Request request
-                = new RequestToSendMailDto.Request(null, MailType.CTMS_USER_REGISTRATION,
-                                                   singletonList("BETA"),
-                                                   recipients,
-                                                   Stream.of(new String[][]{
+        final RequestToSendMailDto.SimpleRequest simpleRequest
+                = new RequestToSendMailDto.SimpleRequest(null, MailType.CTMS_USER_REGISTRATION,
+                                                         singletonList("BETA"),
+                                                         recipients,
+                                                         Stream.of(new String[][]{
                                                            {"passwordURL", "www.cubectms.com"},
                                                            {"sponsorName", "CRSCUBE"},
                                                            {"username", "Lee Tae Su"},
                                                            {"userId", "taesu"},
                                                            {"systemURL", "www.cubectms.com"}
-                                                   }).collect(Collectors.toMap(o -> o[0], o -> o[1])));
+                                                   }).collect(Collectors.toMap(o -> o[0], o -> o[1])),
+                                                         null);
 
 
         //When
-        final Mono<RequestToSendMailDto.Response> responseMono = this.sendMailService.requestToSend(request);
+        final Mono<RequestToSendMailDto.Response> responseMono = this.sendMailService.requestToSend(simpleRequest);
 
         //then
         StepVerifier.create(responseMono)
@@ -89,19 +89,19 @@ public class RequestToSendEmailServiceTest {
     public void 필수_바인딩_파라미터를_누락한_메일전송_요청_테스트() {
         //Given
         final List<String> recipients = Arrays.asList("taesu@crscube.co.kr", "dlxotn216@gmail.com");
-        final RequestToSendMailDto.Request request
-                = new RequestToSendMailDto.Request(null, MailType.CTMS_USER_REGISTRATION,
-                                                   singletonList("BETA"),
-                                                   recipients,
-                                                   Stream.of(new String[][]{
+        final RequestToSendMailDto.SimpleRequest simpleRequest
+                = new RequestToSendMailDto.SimpleRequest(null, MailType.CTMS_USER_REGISTRATION,
+                                                         singletonList("BETA"),
+                                                         recipients,
+                                                         Stream.of(new String[][]{
                                                            {"passwordURL", "www.cubectms.com"},
                                                            {"sponsorName", "CRSCUBE"},
                                                            {"systemURL", "www.cubectms.com"}
-                                                   }).collect(Collectors.toMap(o -> o[0], o -> o[1])));
+                                                   }).collect(Collectors.toMap(o -> o[0], o -> o[1])), null);
 
 
         //When
-        final Mono<RequestToSendMailDto.Response> responseMono = this.sendMailService.requestToSend(request);
+        final Mono<RequestToSendMailDto.Response> responseMono = this.sendMailService.requestToSend(simpleRequest);
 
         //then
         //suite will not be attempt

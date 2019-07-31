@@ -9,9 +9,10 @@ import lombok.Getter;
 @AllArgsConstructor @Getter
 public enum MailType {
 
-    CTMS_USER_REGISTRATION("/ctms/registered_user/%s.ftl", "CTMS_USER_REGISTRATION")
+    CTMS_USER_REGISTRATION("/ctms/registered_user/%s.ftl", "CTMS_USER_REGISTRATION", LogoType.CTMS)
     ;
 
-    private String location;
+    private String templateLocation;
     private String i18nCode;
+    private LogoType logoType;
 }
